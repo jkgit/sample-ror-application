@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-DataEngineering::Application.load_tasks
+SampleApplication::Application.load_tasks

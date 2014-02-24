@@ -1,4 +1,10 @@
-DataEngineering::Application.routes.draw do
+SampleApplication::Application.routes.draw do
+  resources :merchants do as_routes end
+
+  resources :purchasers do as_routes end
+
+  resources :items do as_routes end
+
   devise_for :users
 
   resources :welcome do as_routes end

@@ -7,3 +7,38 @@ ul.hmenu {
 ul.hmenu li {
   display: inline;  
 }
+
+.left {
+	float:left
+}
+
+.right {
+	float:right
+}
+
+#content {
+	margin: 25px 0 0 25px;
+	float:clear
+}
+
+.clear-fix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+form.open-id-provider {
+	float:left;
+}
+.sub-content {
+	padding-top:1em;
+}
+
+<!--[if IE 6]>
+.clear-fix {
+    zoom: 1;
+}
+<![endif]-->

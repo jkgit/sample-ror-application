@@ -1,22 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>DataEngineering</title>
+  <title>Sample RoR Application</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-	
-<ul class="hmenu">
-  <%= render 'devise/menu/registration_items' %>
-  <%= render 'devise/menu/login_items' %>
-</ul>
-	
-<p class="notice"><%= notice %></p>
-<p class="alert"><%= alert %></p>
+<header>
+</header>
 
-<%= yield %>
+<nav class="clear-fix">	
+	<ul class="hmenu left">
+	  <%= render 'devise/menu/registration_items' %>
+	  <%= render 'devise/menu/login_items' %>
+	</ul>
+	
+	<ul class="hmenu right">
+	  <li><%= link_to('Home', welcome_index_path)%></li>
+	  <li><%= link_to('Import', import_purchases_path)%></li>
+	  <li><%= link_to('Purchases', purchases_path)%></li>
+	  <li><%= link_to('Purchasers', purchasers_path)%></li>
+	  <li><%= link_to('Items', items_path)%></li>
+	  <li><%= link_to('Merchants', merchants_path)%></li>
+	</ul>
+</nav>
+
+<div id="content">
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+
+	<%= yield %>
+</div>
 
 </body>
 </html>

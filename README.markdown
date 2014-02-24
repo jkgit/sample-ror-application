@@ -1,11 +1,12 @@
-## Sample Ruby on Rails application
+# Sample Ruby on Rails application
 This is a sample Ruby on Rails application intended to assist in the evaluation of my development skills.  The project includes the following features :
 
 1. Open ID and Database User Authentication
 1. Data Import via uploaded file, including data normalization
+1. (not implemented yet) JQuery based batch loading of images, scrolling, and ordering
 1. Unit Tests 
 
-# Project Description
+## Project Description
 Imagine that company X has just acquired a new company Y.  Unfortunately, company Y has never stored their data in a database and instead uses a plain text file.  We need to create a way for the new subsidiary to import their data into a database.  The application should provide a web interface that accepts file uploads, normalizes the data, and then stores it in a relational database.
 
 Some sample requirements:
@@ -13,6 +14,9 @@ Some sample requirements:
 1. Your app must accept (via a form) a tab delimited file with the following columns: purchaser name, item description, item price, purchase count, merchant address, and merchant name.  You can assume the columns will always be in that order, that there will always be data in each column, and that there will always be a header line.  An example input file named example_input.tab is included in this repo.
 1. Your app must parse the given file, normalize the data, and store the information in a relational database.
 1. After upload, your application should display the total amount gross revenue represented by the uploaded file.
+1. (not implemented yet) Allow the user to upload an image of an item
+1. (not implemented yet) Present a screen containing 10 items, as user scrolls down, load additional 10 items at a time
+1. (not implemented yet) Allow user to sort the items by drag-and-drop (allow multiple drag via click)
 
 The application should:
 
@@ -25,7 +29,7 @@ The application does not need to:
 1. be aesthetically pleasing
 
 
-# Installation
+## Installation
 
 To install the sample application execute the following commands :
 
@@ -34,7 +38,7 @@ To install the sample application execute the following commands :
     % cd sample-ror-application
     % rake db:migrate
 
-# Testing the user interface in a browser
+## Testing the user interface in a browser
 
 First start the rails server :
 
@@ -57,6 +61,13 @@ Then :
 Execute the following commands in your shell or command line (or IDE)
 
     % rake db:reset
-    % rake db:migrate
     % rake db:test:load
     % rake test
+
+## Third Party Gems
+
+This sample application takes advantage of 3rd party gems (no point reinventing the wheel):
+
+1. Devise - Authentication
+1. Active Scaffold - CRUD screens
+1. Roo - Spreadsheet support
