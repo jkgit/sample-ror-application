@@ -1,9 +1,28 @@
-# Sample Ruby on Rails application
+## Sample Ruby on Rails application
 This is a sample Ruby on Rails application intended to assist in the evaluation of my development skills.  The project includes the following features :
 
 1. Open ID and Database User Authentication
 1. Data Import via uploaded file, including data normalization
 1. Unit Tests 
+
+# Project Description
+Imagine that company X has just acquired a new company Y.  Unfortunately, company Y has never stored their data in a database and instead uses a plain text file.  We need to create a way for the new subsidiary to import their data into a database.  The application should provide a web interface that accepts file uploads, normalizes the data, and then stores it in a relational database.
+
+Some sample requirements:
+
+1. Your app must accept (via a form) a tab delimited file with the following columns: purchaser name, item description, item price, purchase count, merchant address, and merchant name.  You can assume the columns will always be in that order, that there will always be data in each column, and that there will always be a header line.  An example input file named example_input.tab is included in this repo.
+1. Your app must parse the given file, normalize the data, and store the information in a relational database.
+1. After upload, your application should display the total amount gross revenue represented by the uploaded file.
+
+The application should:
+
+1. Handle authentication or authorization
+1. Be easy to setup and run on Linux, Mac OS X, or Windows.
+1. Not require any for-pay software.
+
+The application does not need to:
+
+1. be aesthetically pleasing
 
 
 # Installation
@@ -41,22 +60,3 @@ Execute the following commands in your shell or command line (or IDE)
     % rake db:migrate
     % rake db:test:load
     % rake test
-
-## Project Description
-Imagine that company X has just acquired a new company Y.  Unfortunately, company Y has never stored their data in a database and instead uses a plain text file.  We need to create a way for the new subsidiary to import their data into a database.  The application should provide a web interface that accepts file uploads, normalizes the data, and then stores it in a relational database.
-
-Some sample requirements:
-
-1. Your app must accept (via a form) a tab delimited file with the following columns: purchaser name, item description, item price, purchase count, merchant address, and merchant name.  You can assume the columns will always be in that order, that there will always be data in each column, and that there will always be a header line.  An example input file named example_input.tab is included in this repo.
-1. Your app must parse the given file, normalize the data, and store the information in a relational database.
-1. After upload, your application should display the total amount gross revenue represented by the uploaded file.
-
-The application should:
-
-1. Handle authentication or authorization
-1. Be easy to setup and run on Linux, Mac OS X, or Windows.
-1. Not require any for-pay software.
-
-The application does not need to:
-
-1. be aesthetically pleasing
