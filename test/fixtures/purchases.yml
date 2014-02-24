@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  purchaser_name: MyString
+  item_description: MyString
+  item_price: 9.99
+  purchase_count: 1
+  merchant_address: MyString
+  merchant_name: MyString
+
+two:
+  purchaser_name: MyString
+  item_description: MyString
+  item_price: 9.99
+  purchase_count: 1
+  merchant_address: MyString
+  merchant_name: MyString
