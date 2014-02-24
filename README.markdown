@@ -1,4 +1,4 @@
-## Sample Ruby on Rails application
+# Sample Ruby on Rails application
 This is a sample Ruby on Rails application intended to assist in the evaluation of my development skills.  The project includes the following features :
 
 1. Open ID and Database User Authentication
@@ -8,7 +8,7 @@ This is a sample Ruby on Rails application intended to assist in the evaluation 
 
 * Not implemented yet
 
-# Project Description
+## Project Description
 Imagine that company X has just acquired a new company Y.  Unfortunately, company Y has never stored their data in a database and instead uses a plain text file.  We need to create a way for the new subsidiary to import their data into a database.  The application should provide a web interface that accepts file uploads, normalizes the data, and then stores it in a relational database.
 
 Some sample requirements:
@@ -33,7 +33,7 @@ The application does not need to:
 1. be aesthetically pleasing
 
 
-# Installation
+## Installation
 
 To install the sample application execute the following commands :
 
@@ -42,7 +42,7 @@ To install the sample application execute the following commands :
     % cd sample-ror-application
     % rake db:migrate
 
-# Testing the user interface in a browser
+## Testing the user interface in a browser
 
 First start the rails server :
 
