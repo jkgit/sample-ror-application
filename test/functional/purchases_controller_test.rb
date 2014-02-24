@@ -8,25 +8,22 @@ class PurchasesControllerTest < ActionController::TestCase
     # need a user for devise authentication, and it needs to be in the users table
     @user = users(:one)
     @user.save
+    
+    # authenticate user via devise
+    sign_in :user, @user
   end
   
   test "should get index" do
-    # authenticate user via devise
-    sign_in :user, @user
     get :index
     assert_response :success
   end
 
   test "should get new" do
-    # authenticate user via devise
-    sign_in :user, @user
     get :new
     assert_response :success
   end
   
   test "should import data" do
-    # authenticate user via devise
-    sign_in :user, @user
     aFile=fixture_file_upload('files/example_input.tab')
     post :do_import, attachment:aFile
     assert_response :redirect

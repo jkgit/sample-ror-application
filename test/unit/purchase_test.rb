@@ -17,10 +17,14 @@ class PurchaseTest < ActiveSupport::TestCase
     assert total_gross==95
   end
   
-  # test that the correct number of records are created from the example input
+  # test that the correct number of records are created from the example input.  make
+  # sure to also test for normalized data
   test "rows imported" do
-    # save the current number of purchases to compare later
-    current_purchases = Purchase.count
+    # start clean so we will know for sure there is no existing data that is not normalized
+    Purchase.delete_all
+    Merchant.delete_all
+    Item.delete_all
+    Purchaser.delete_all
     
     #load purchases from the example input
     File.open("test/fixtures/files/example_input.tab", "r") do |aFile|
@@ -29,19 +33,26 @@ class PurchaseTest < ActiveSupport::TestCase
     
     # now find the new number of purchases after importing
     new_purchases_count = Purchase.count
+    # number of merchants
+    new_merchants_count = Merchant.count
+    # number of items
+    new_items_count = Item.count
+    # number of purchasers
+    new_purchasers_count = Purchaser.count
 
-    # check to be sure they are exactly 4 different (the known number of rows)
-    calculated_new_purchases = new_purchases_count - current_purchases
-    assert calculated_new_purchases == 4, "Expected 4 new purchase records but found #{calculated_new_purchases}"
+    assert new_purchases_count == 4, "Expected 4 new purchase records but found #{new_purchases_count}"
+    assert new_merchants_count == 3, "Expected 3 new merchant records but found #{new_merchants_count}"
+    assert new_items_count == 3, "Expected 3 new item records but found #{new_items_count}"
+    assert new_purchasers_count == 3, "Expected 3 new purchaser records but found #{new_purchasers_count}"
   end
   
-  # test that the normalize function works
-  test "values normalized" do
+  # test that the standardized function works
+  test "values standardized" do
     # start clean so we will know for sure there is no existing data that is not normalized
     Purchase.delete_all
     
-    # first load all the rows from the denormalized test spreadsheet
-    File.open("test/fixtures/files/example_denormalized_input.tab", "r") do |aFile|
+    # first load all the rows from the notstandardized test spreadsheet
+    File.open("test/fixtures/files/example_notstandardized_input.tab", "r") do |aFile|
       Purchase.import aFile
     end
     
@@ -50,12 +61,12 @@ class PurchaseTest < ActiveSupport::TestCase
     
     # loop through each purchase and test if the purchaser name is normalized
     purchases.each do |purchase| 
-      calculated_normalized_name=Purchase.normalize(purchase.purchaser_name)
-      found_normalized_name=purchase.purchaser_name
+      calculated_standardized_name=Purchase.standardize(purchase.purchaser.name)
+      found_standardized_name=purchase.purchaser.name
       
       # compare the calculated name and the found name, if they are different it means that
-      # the name was not normalized when inserted into the db
-      assert found_normalized_name == found_normalized_name, "Expected #{calculated_normalized_name} but found #{found_normalized_name}"
+      # the name was not s when inserted into the db
+      assert found_standardized_name == calculated_standardized_name, "Expected #{calculated_standardized_name} but found #{found_standardized_name}"
     end
   end
 end

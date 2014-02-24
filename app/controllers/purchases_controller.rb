@@ -1,8 +1,8 @@
 class PurchasesController < ApplicationController
   active_scaffold :"purchase" do |conf|
-    list.columns = [:purchaser_name, :item_description, :merchant_address, :merchant_name ]
-    show.columns = [:purchaser_name, :item_description, :item_price, :purchase_count, :merchant_address, :merchant_name ]
-    list.sorting = {:purchaser_name => 'ASC'}
+    #list.columns = [:purchaser_name, :item_description, :merchant_address, :merchant_name ]
+    #show.columns = [:purchaser_name, :item_description, :item_price, :purchase_count, :merchant_address, :merchant_name ]
+    #list.sorting = {:purchaser_name => 'ASC'}
   end
   
   def import
