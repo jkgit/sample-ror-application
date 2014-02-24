@@ -37,6 +37,12 @@ form.open-id-provider {
 	padding-top:1em;
 }
 
+.item {
+	float:left;
+	margin: 6px;
+	cursor: move;
+}
+
 <!--[if IE 6]>
 .clear-fix {
     zoom: 1;

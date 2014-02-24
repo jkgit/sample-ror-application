@@ -1,4 +1,10 @@
 SampleApplication::Application.routes.draw do
+  resources :catalogs do as_routes
+       member do
+         get 'browse'
+       end
+  end
+
   resources :merchants do as_routes end
 
   resources :purchasers do as_routes end

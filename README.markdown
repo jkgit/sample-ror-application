@@ -14,9 +14,11 @@ Some sample requirements:
 1. Your app must accept (via a form) a tab delimited file with the following columns: purchaser name, item description, item price, purchase count, merchant address, and merchant name.  You can assume the columns will always be in that order, that there will always be data in each column, and that there will always be a header line.  An example input file named example_input.tab is included in this repo.
 1. Your app must parse the given file, normalize the data, and store the information in a relational database.
 1. After upload, your application should display the total amount gross revenue represented by the uploaded file.
-1. (not implemented yet) Allow the user to upload an image of an item
-1. (not implemented yet) Present a screen containing 10 items, as user scrolls down, load additional 10 items at a time
+1. (not implemented yet) Allow the user to store a url to an image of an item
+1. (not implemented yet) Allow the user to attach items to a catalog of items
+1. (not implemented yet) Present a screen containing 10 items from a catalog, as user scrolls down, load additional 10 items at a time
 1. (not implemented yet) Allow user to sort the items by drag-and-drop (allow multiple drag via click)
+1. (not implemented yet) Allow user to save the new order of items so that when page is reloaded order is maintained
 
 The application should:
 

@@ -1,0 +1,14 @@
+<div class="items">
+	<div class="rows clear-fix">
+		<% @catalog.items.each do |item|%>
+        <div class="item draggable droppable selectable" data-sort-order="<%=item.sort_order%>" data-id="<%=item.id%>">
+            <img src="<%= item.url %>" alt="<%=item.url%>">
+            <span class="trash"></span>
+        </div>
+        <% end %> 
+    </div>
+    <div class="loading_box">
+    	<img src="/assets/ajax_loading.gif" alt="Loading...">
+        <p>Loading next set of images...</p>
+    </div>
+</div>
