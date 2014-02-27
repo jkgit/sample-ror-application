@@ -1,4 +1,13 @@
 SampleApplication::Application.routes.draw do
+  resources :catalogs do as_routes
+       member do
+         get 'browse'
+         get 'batch_of_items'
+         post 'update_order_of_items'
+         post 'update_order_of_items_bulk'
+       end
+  end
+
   resources :merchants do as_routes end
 
   resources :purchasers do as_routes end

@@ -5,3 +5,11 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+(1..5).each do |i|
+  Catalog.create(name: "Test catalog #{i}")
+
+  (1..40).each do|x|
+    Item.create description: "Test item #{x}", price: 19.99, catalog_id: i, sort_order: x, url: "http://placehold.it/200/22#{x}#{x}#{x}#{x}/ff#{x%10}#{x%10}#{x%10}#{x%10}&text=thumbnail-#{x}"
+  end
+end

@@ -1,0 +1,267 @@
+<div class="items">
+	<div class="row">
+		<% @item_batch.each do |item|%>
+        <div class="item draggable droppable selectable" data-sort-order="<%=item.sort_order%>" data-id="<%=item.id%>">
+            <img src="<%= item.url %>" alt="<%=item.url%>">
+            <span class="status"></span>
+        </div>
+        <% end %> 
+	    <div class="loading_box left">
+	    	<img src="/assets/ic_loading_sun.png" alt="Loading...">
+	        <p>Loading next set of images...</p>
+	    </div>
+    </div>
+</div>
+                
+<script language="javascript">
+<!--
+	// the number of the current max page of 12 items that is loaded
+	var currentPage = parseInt(<%=@page%>);
+	
+	// a lock to ensure that only one set of new items is loaded at a time
+	var loading = false;
+	
+	// list of selected objects
+	var selected = $([]); 	
+		
+	// for the shift-click event
+	var lastselected = '';	
+		
+	// setup some event handlers once the page has loaded
+	$(document).ready( function() {
+		// setup drag, drop, and selectable events.  needs to be in seperate method so can be called after elements
+		// are added via scroll
+		setupDragAndDrop();
+    	
+    	// load images if the loading image is already visible at the first doc load
+    	// (like the screen is so big it is already showing the full batch of images)
+    	loadImagesIfVisible();
+    	
+		// handler for a scroll event.  will check to see if the loading image is visible, if so it will load
+		// an extra 12 items
+		$( window ).scroll(function() {
+			loadImagesIfVisible();
+		});
+	});
+	
+	$(window).resize(loadImagesIfVisible);
+	
+	function loadImagesIfVisible() {
+		// don't start loading if we are already loading, subject to race condition
+		if (!loading) {
+			// use jquery.visible plugin to detect whether the loading box is currently visible.  pass in 
+			// true because we want to know if any part of the loading box is visible.  not just the entire
+			// loading box
+			if ($('.loading_box').visible(true)) {
+				// about to start a load, lock out any other scroll events that could trigger this
+				loading=true;
+				
+				//load the next set of 12 divs
+				$.getJSON( "/catalogs/<%=@catalog.id%>/batch_of_items", {page : currentPage+1, size : 3}, function(data) {
+					var numItemsLoaded = 0;
+					
+					if (data.items==null || data.items.length==0) {
+						//end of the list, hide the loading box
+						$('.loading_box').hide();
+					}
+					else {
+						// set the current max page to the page just returned from json, sort of a sanity check
+						currentPage=parseInt(data.page);
+						
+						// grab the row container that we will add our new items to
+						var rowContainer = $('.items .row');
+						
+						// grab the first item from the row, we are going to be lazy and clone it to add new ones
+						// this way we don't have to embed html for the div and img elements in the js
+						var itemToClone = $('.item', rowContainer).first();
+						
+						// loop through each item and add a new div to the end of the current list of items
+						$.each(data.items, function( i, item ) {
+							var newitem = itemToClone.clone();
+							$('img', newitem).attr("src", item.url);
+							$('img', newitem).attr("alt", item.url);
+							newitem.attr("data-sort-order", item.sort_order);
+							newitem.attr("data-id", item.id);
+							
+							// grab the last span3 in the row container, and add our new item after it
+							$('.loading_box').before(newitem);
+						});
+						
+						numItemsLoaded=data.items.length
+						
+						// reattach events so we include the new elements
+						setupDragAndDrop();
+					}
+					
+					// finished loading
+					loading=false;
+					
+					// if there are still images to be loaded (last load loaded more than 0) and
+					// load images if the image is visible
+					if (numItemsLoaded > 0) {
+						loadImagesIfVisible();
+					}
+				}); 
+			}
+		}
+	}
+	
+	function setupDragAndDrop() {
+		// remove any events that are bound to the selectables so we don't get two calls to the handler
+		// this will also cover the draggable and droppable events since currently all
+		// selectables are draggable and droppable
+		$(".selectable").off("click");
+		
+		// handle click and ctrl-click to select multiple items
+		$(".selectable").click(function(evt){
+			// if this element was just dropped, don't select anything.  this "absorbs" the click event 
+			// that happens after the drag stops.  we don't want to do both.
+			if ($(this).hasClass("dropped")) {
+				// remove class from any element that has the dropped class, not just the item that was
+				// actually dragged
+				$('.dropped').removeClass("dropped");
+				
+				lastselected = null;
+			}
+			else {
+				// if ctrl not pressed, unselect all selected elements
+				if (!evt.ctrlKey)
+					$(".ui-selected").removeClass("ui-selected"); // clear other selections
+	
+				// if not already selected or dropped, cause this element to be selected
+				if (!($(this).hasClass("ui-selected")||$(this).hasClass("dropped"))) {
+			   		$(this).addClass("ui-selected");
+			   		lastselected = this;
+				}
+				// it was selected already, so cause it to be not selected
+				else {
+					$(this).removeClass("ui-selected");
+					lastselected = null;
+				}
+			}
+		});
+		
+		// make all the draggable elements (span3) draggable and revert to original spot
+	    $( ".draggable" ).draggable({ 
+	    	distance:10,
+	    	start: function(ev, ui) {
+				$(this).addClass("ui-selected");
+				selected = $(".ui-selected").each(function() {
+					$(this).addClass("dragging");
+				});
+			},
+			drag: function(ev, ui) {
+				var dt = ui.position.top, dl = ui.position.left;
+				selected.not(this).each(function() {
+					// move the objects by the event size
+					var el = $(this);
+					el.css({top: dt, left: dl});
+				});
+			},
+			stop: function(ev, ui){
+				// make sure any insert markers are removed
+	      		$('.insert-marker').remove();
+	      		
+				// first check that the element does not already have the dropped class, if the elements
+				// were dropped onto a valid element, the droppable handler will already have handled this 
+				// event.  we don't want draggable to also reposition the elements (or the click handler either)
+				if (!$(this).hasClass("dropped")) {
+					// tell the click handler to ignore this event
+					$(this).addClass("dropped");
+					
+					// since we are done dragging move each element back to it's original position
+					selected.each(function() {
+						$(this).removeClass("ui-selected");
+						$(this).removeClass("dragging");
+						$(this).css("position","relative");
+						$(this).css("top",0);
+						$(this).css("left","0");
+					});
+				}
+			}}
+		);
+	    
+	    // make all droppable elements (also span3) droppable
+	    $( ".droppable" ).droppable({
+	      	accept: ".draggable",	      	
+	      	over: function( event, ui ) {
+	      		$(this).before($("<div class='insert-marker' style='z-index:1000000;margin:6px 3px 6px 3px; background: black; width:6px; float:left; height:200px; border:4px solid white'></div>"));
+	      	},	
+	      	out: function( event, ui ) {
+	      		$('.insert-marker').remove();
+	      	},
+	      	drop: function( event, ui ) {
+		      	var target=$(this);
+		      	var source=ui.draggable;
+	      		$('.insert-marker').remove();
+		      	
+		      	// move selected in front of target
+		      	target.before(selected);
+		      	
+		      	// object to store the ids that were just moved, we will use this for the ajax post
+		      	var moveditems = new Array();
+		      	
+		      	// we are done dragging, so move all selected back to original positions and push the 
+		      	// id of the selected and dragged element onto the moved items array
+				selected.each(function() {
+					$(this).removeClass("ui-selected");
+					$(this).removeClass("dragging");
+					$(this).css("position","relative");
+					$(this).css("top",0);
+					$(this).css("left","0");
+					moveditems[moveditems.length]=($(this).attr("data-id"));
+				});
+				
+				// let other handlers know that we have handled the drop already
+				ui.draggable.addClass("dropped");
+				
+				// construct object to represent the change that we just made, this will end up as JSON
+				var itemChange = {}
+				itemChange["moved_items"]=moveditems;
+				itemChange["before_item"]=$(this).attr("data-id");
+				
+				// the API method will return the list of keys and new sort orders
+				// of those items that were affected.
+				// NOTE - Since the current code does not depend on the data-sortorder value, I am not 
+				// going to bother updating it here.  but it could/should be updated so the attributes
+				// are accurate after the AJAX post
+				$.ajax("/catalogs/<%=@catalog.id%>/update_order_of_items_bulk", {
+				    data : JSON.stringify({"item_change":itemChange}),
+				    contentType : 'application/json',
+			    	type : 'POST',
+			    	success : showSavingMessage
+				});
+				
+				// a quick function to flash a "Saved" message when the ajax call is successful.
+				// TODO - if the ajax call is unsuccessful rollback the changes
+				function showSavingMessage() {
+					// show the message on the target (dropped onto element) 
+		    		var targetStatus = $('.status', target);
+			    	targetStatus.toggleClass("saving");
+			    	targetStatus.html("Saved");
+			    	
+			    	// show the message on each of the dragged elements
+					selected.each(function() {
+						var sourceStatus = $('.status', this);
+			    		sourceStatus.toggleClass("saving");
+			    		sourceStatus.html("Saved");
+			   		});
+			   		
+			   		// set a timeout to remove the message after 1.5 seconds
+			    	setTimeout(function() {
+			    		var targetStatus = $('.status', target);
+				    	targetStatus.toggleClass("saving");
+				    	targetStatus.html("");
+			    	
+						selected.each(function() {
+							var sourceStatus = $('.status', this);
+				    		sourceStatus.toggleClass("saving");
+				    		sourceStatus.html("");
+				    	});
+			    	}, 1500);
+				}
+			}
+	    });
+	}
+//-->
+</script>
