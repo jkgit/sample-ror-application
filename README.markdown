@@ -20,6 +20,7 @@ Some sample requirements:
 1. As user scrolls down, load additional 3 items at a time
 1. Allow user to sort the items by drag-and-drop (allow multiple drag via click)
 1. Allow user to save the new order of items so that when page is reloaded order is maintained
+1. Implement methods to retrieve batches of images and store the order as API methods
 
 The application should:
 
